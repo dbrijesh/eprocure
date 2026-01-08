@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${AZURE_POSTGRES_HOST:localhost}:5432/${AZURE_POSTGRES_DB:eprocure}?sslmode=require
+    username: ${AZURE_POSTGRES_USER:postgres}
+    password: ${AZURE_POSTGRES_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      pool-name: EprocureHikariPool
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    com.eprocure: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN

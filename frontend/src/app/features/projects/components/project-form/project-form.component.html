@@ -1,0 +1,116 @@
+<div class="project-form-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>add_circle</mat-icon>
+    Create New Project
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="projectForm" class="project-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Project Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter project title" required>
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-error *ngIf="projectForm.get('title')?.invalid">
+            {{ getErrorMessage('title') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            placeholder="Enter project description"
+            rows="4"
+            required>
+          </textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-error *ngIf="projectForm.get('description')?.invalid">
+            {{ getErrorMessage('description') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Budget</mat-label>
+          <input matInput type="number" formControlName="budget" placeholder="0.00" required>
+          <mat-icon matPrefix>euro</mat-icon>
+          <mat-error *ngIf="projectForm.get('budget')?.invalid">
+            {{ getErrorMessage('budget') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Currency</mat-label>
+          <mat-select formControlName="currency" required>
+            <mat-option value="EUR">EUR (€)</mat-option>
+            <mat-option value="USD">USD ($)</mat-option>
+            <mat-option value="GBP">GBP (£)</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>attach_money</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate" required>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="projectForm.get('startDate')?.invalid">
+            {{ getErrorMessage('startDate') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate" required>
+          <mat-icon matPrefix>event</mat-icon>
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-error *ngIf="projectForm.get('endDate')?.invalid">
+            {{ getErrorMessage('endDate') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row" *ngIf="hasDateRangeError">
+        <div class="date-range-error">
+          <mat-icon>error</mat-icon>
+          End date must be equal to or after start date
+        </div>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of statuses" [value]="status.value">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>flag</mat-icon>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isSubmitting">
+      Cancel
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="projectForm.invalid || isSubmitting">
+      <mat-icon>save</mat-icon>
+      {{ isSubmitting ? 'Creating...' : 'Create Project' }}
+    </button>
+  </mat-dialog-actions>
+</div>
