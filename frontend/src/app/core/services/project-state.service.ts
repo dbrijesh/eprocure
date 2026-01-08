@@ -57,6 +57,24 @@ export class ProjectStateService {
     );
   }
 
+  updateProject(id: string, request: CreateProjectRequest): Observable<ApiResponse<Project>> {
+    return this.apiService.updateProject(id, request).pipe(
+      tap(() => {
+        // Refresh data after successful update
+        this.refreshData();
+      })
+    );
+  }
+
+  deleteProject(id: string): Observable<ApiResponse<void>> {
+    return this.apiService.deleteProject(id).pipe(
+      tap(() => {
+        // Refresh data after successful deletion
+        this.refreshData();
+      })
+    );
+  }
+
   refreshData(): void {
     this.loadStatistics();
     this.loadProjects();

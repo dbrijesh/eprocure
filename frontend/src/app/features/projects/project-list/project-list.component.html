@@ -1,0 +1,118 @@
+<div class="projects-container">
+  <div class="page-header">
+    <div>
+      <h1>Projects</h1>
+      <p class="subtitle">Manage all your procurement projects</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="openNewProjectDialog()">
+      <mat-icon>add</mat-icon>
+      New Project
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading projects...</p>
+  </div>
+
+  <!-- Projects Table -->
+  <mat-card *ngIf="!loading()" class="table-card">
+    <div *ngIf="projects().length === 0" class="empty-state">
+      <mat-icon>folder_open</mat-icon>
+      <h3>No projects found</h3>
+      <p>Create your first procurement project to get started</p>
+      <button mat-raised-button color="primary" (click)="openNewProjectDialog()">
+        <mat-icon>add</mat-icon>
+        Create Project
+      </button>
+    </div>
+
+    <div *ngIf="projects().length > 0" class="table-container">
+      <table mat-table [dataSource]="projects()" class="projects-table">
+
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Project Title</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="project-title">
+              <strong>{{ project.title }}</strong>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="project-description">
+              {{ project.description }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Budget Column -->
+        <ng-container matColumnDef="budget">
+          <th mat-header-cell *matHeaderCellDef>Budget</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="project-budget">
+              {{ formatCurrency(project.budget, project.currency) }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let project">
+            <mat-chip [ngClass]="getStatusClass(project.status)">
+              {{ getStatusLabel(project.status) }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Start Date Column -->
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef>Start Date</th>
+          <td mat-cell *matCellDef="let project">
+            {{ formatDate(project.startDate) }}
+          </td>
+        </ng-container>
+
+        <!-- End Date Column -->
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef>End Date</th>
+          <td mat-cell *matCellDef="let project">
+            {{ formatDate(project.endDate) }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="action-buttons">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="openEditDialog(project)"
+                matTooltip="Edit project">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteProject(project)"
+                matTooltip="Delete project">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="project-row"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

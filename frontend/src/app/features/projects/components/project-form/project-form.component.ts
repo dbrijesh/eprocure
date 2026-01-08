@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectStateService } from '../../../../core/services/project-state.service';
-import { CreateProjectRequest, ProjectStatus } from '../../../../core/models/project.model';
+import { CreateProjectRequest, Project, ProjectStatus } from '../../../../core/models/project.model';
 
 @Component({
   selector: 'app-project-form',
@@ -37,6 +37,8 @@ export class ProjectFormComponent implements OnInit {
 
   projectForm!: FormGroup;
   isSubmitting = false;
+  isEditMode = false;
+  projectId?: string;
 
   statuses = [
     { value: ProjectStatus.DRAFT, label: 'Draft' },
@@ -44,8 +46,18 @@ export class ProjectFormComponent implements OnInit {
     { value: ProjectStatus.COMPLETED, label: 'Completed' }
   ];
 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { project?: Project }) {
+    if (data?.project) {
+      this.isEditMode = true;
+      this.projectId = data.project.id;
+    }
+  }
+
   ngOnInit(): void {
     this.initForm();
+    if (this.isEditMode && this.data.project) {
+      this.populateForm(this.data.project);
+    }
   }
 
   private initForm(): void {
@@ -76,6 +88,20 @@ export class ProjectFormComponent implements OnInit {
     return null;
   }
 
+  private populateForm(project: Project): void {
+    this.projectForm.patchValue({
+      title: project.title,
+      description: project.description,
+      budget: project.budget,
+      currency: project.currency,
+      startDate: new Date(project.startDate),
+      endDate: new Date(project.endDate),
+      status: project.status,
+      departmentId: project.departmentId,
+      projectManagerId: project.projectManagerId
+    });
+  }
+
   onSubmit(): void {
     if (this.projectForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
@@ -87,15 +113,29 @@ export class ProjectFormComponent implements OnInit {
         endDate: this.formatDate(formValue.endDate)
       };
 
-      this.projectState.createProject(request).subscribe({
-        next: () => {
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          console.error('Error creating project:', error);
-          this.isSubmitting = false;
-        }
-      });
+      if (this.isEditMode && this.projectId) {
+        // Update existing project
+        this.projectState.updateProject(this.projectId, request).subscribe({
+          next: () => {
+            this.dialogRef.close(true);
+          },
+          error: (error) => {
+            console.error('Error updating project:', error);
+            this.isSubmitting = false;
+          }
+        });
+      } else {
+        // Create new project
+        this.projectState.createProject(request).subscribe({
+          next: () => {
+            this.dialogRef.close(true);
+          },
+          error: (error) => {
+            console.error('Error creating project:', error);
+            this.isSubmitting = false;
+          }
+        });
+      }
     }
   }
 

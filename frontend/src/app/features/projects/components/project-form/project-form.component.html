@@ -1,7 +1,7 @@
 <div class="project-form-dialog">
   <h2 mat-dialog-title>
-    <mat-icon>add_circle</mat-icon>
-    Create New Project
+    <mat-icon>{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+    {{ isEditMode ? 'Edit Project' : 'Create New Project' }}
   </h2>
 
   <mat-dialog-content>
@@ -110,7 +110,7 @@
       (click)="onSubmit()"
       [disabled]="projectForm.invalid || isSubmitting">
       <mat-icon>save</mat-icon>
-      {{ isSubmitting ? 'Creating...' : 'Create Project' }}
+      {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Project' : 'Create Project') }}
     </button>
   </mat-dialog-actions>
 </div>

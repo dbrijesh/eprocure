@@ -26,6 +26,16 @@
     mat-icon {
       margin-right: 0.5rem;
     }
+
+    &[mat-raised-button][color="primary"] {
+      background-color: #10b981 !important;
+      color: white !important;
+
+      &:hover {
+        background-color: #059669 !important;
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+      }
+    }
   }
 }
 
@@ -114,6 +124,8 @@
 }
 
 .recent-projects {
+  padding: 1.5rem !important;
+
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -142,10 +154,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1.25rem;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     transition: all 0.2s ease;
+    gap: 1rem;
 
     &:hover {
       border-color: #cbd5e1;
@@ -203,28 +216,46 @@
 
   .empty-state {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 4rem 2rem;
 
     mat-icon {
       font-size: 64px;
       width: 64px;
       height: 64px;
       color: #cbd5e1;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     h3 {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.75rem 0;
       color: #0f172a;
+      font-size: 1.25rem;
+      font-weight: 600;
     }
 
     p {
       color: #64748b;
-      margin: 0 0 1.5rem 0;
+      margin: 0 0 2rem 0;
+      font-size: 0.9375rem;
     }
 
-    button mat-icon {
-      margin-right: 0.5rem;
+    button {
+      &[mat-raised-button][color="primary"] {
+        background-color: #10b981 !important;
+        color: white !important;
+
+        &:hover {
+          background-color: #059669 !important;
+          box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        }
+      }
+
+      mat-icon {
+        margin-right: 0.5rem;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }
@@ -236,15 +267,18 @@
 }
 
 .quick-actions, .project-status-widget {
+  padding: 1.5rem !important;
+
   h3 {
-    margin: 0 0 0.25rem 0;
+    margin: 0 0 0.5rem 0;
     font-size: 1.125rem;
+    font-weight: 600;
   }
 
   p {
     color: #64748b;
     font-size: 0.875rem;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1.25rem 0;
   }
 
   .action-btn {
@@ -253,9 +287,22 @@
     padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
     text-align: left;
+    color: #64748b;
+    transition: all 0.2s ease;
 
     mat-icon {
       margin-right: 0.75rem;
+      color: #64748b;
+      transition: color 0.2s ease;
+    }
+
+    &:hover {
+      background-color: rgba(16, 185, 129, 0.08);
+      color: #10b981;
+
+      mat-icon {
+        color: #10b981;
+      }
     }
   }
 
